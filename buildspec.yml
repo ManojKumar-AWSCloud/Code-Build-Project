@@ -1,0 +1,16 @@
+version: 0.2
+phase: 
+  install:
+    runtime-versions:
+    docker: 25
+  build:
+    commands:
+      - cd /
+      - echo " Building the docker image"
+      - docker build -t "<>"
+      - docker push
+  post_build:
+    commands:
+      - echo " Docker build is Success full"
+
+  
