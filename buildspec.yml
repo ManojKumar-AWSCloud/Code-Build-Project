@@ -1,16 +1,19 @@
-version: 0.2
-phase: 
-  install:
-    runtime-versions:
-    docker: 25
-  build:
-    commands:
-      - cd /
-      - echo " Building the docker image"
-      - docker build -t "<>"
-      - docker push
-  post_build:
-    commands:
-      - echo " Docker build is Success full"
+  version: 0.2
+  env:
+    parameter-store:
+      DOCKER_REGISTRY_USERNAME: /codebuild-project/docker-credential/docker-hub-login-UserName
+      DOCKER_REGISTRY_PASSWORD: /codebuild-project/docker-credential/docker-hub-login-Password
+      DOCKER_REGISTRY_URL: /codebuild-project/docker-credential/docker-hub-regestry-URL
+  phases: 
+    build:
+      commands:
+        - echo " Building the docker image"
+        - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin "$DOCKER_REGISTRY_URL"
+        - docker build -t "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/nginxapplication:latest" .
+        - docker push "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/nginxapplication:latest"
+    post_build:
+      commands:
+        - echo " Docker build is Success full"
+    
 
-  
+    
